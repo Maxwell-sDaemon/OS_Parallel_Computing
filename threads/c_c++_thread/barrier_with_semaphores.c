@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <semaphores.h>
+#include <semaphore.h>
 
 int counter; /* initialize to zero */
 sem_t count_sem; /* initialize to one */
@@ -12,7 +12,7 @@ void * Thread_work(void* rank) {
 	/* Barrier */
 	sem_wait(&count_sem); // initially count_sem unlock thread pass. if count sem locked all thread wait, after reach sem_wait .
 
-	if(counter == thread_count-){
+	if(counter == thread_count-1){
 		counter = 0;
 		sem_post(&count_sem);
 		for ( j = 0 ; j < thread_count - 1 ; j++ )

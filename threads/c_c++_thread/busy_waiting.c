@@ -4,23 +4,26 @@
 
 int n = 100000;
 int thread_count;
-double sum = 0.f;
-void* Thread_sum(void* rank);
-int flag=0; // start with priority 0 thread
+double volatile sum = 0.f;
+void* Thread_sum( void* rank );
+void* Thread_sum2( void* rank );
+int volatile flag = 0; // start with priority 0 thread
 
 int main(int argc, char* argv[]) {
 	long thread;
 	pthread_t* thread_handles;
         thread_count = strtol(argv[1], NULL, 10);
-        thread_count = strtol(argv[1], NULL, 10);
+
         thread_handles = (pthread_t*) malloc ( thread_count * sizeof( pthread_t ));
 
 	for ( thread = 0 ; thread < thread_count; thread++ ) {
-		pthread_create(&thread_handles[thread], NULL, Thread_sum, (void*) thread);									        }
+		pthread_create( &thread_handles[thread], NULL, Thread_sum, (void*) thread );									        
+	}
        	printf("in the main\n");
 
 	for ( thread = 0 ; thread < thread_count ; thread++) {
-	pthread_join(thread_handles[thread], NULL);											        }
+		pthread_join( thread_handles[thread], NULL );											       
+       	}
 
 	free(thread_handles);
 	printf("%f\n", 4.f * sum);
@@ -62,7 +65,7 @@ void* Thread_sum2(void* rank) {
 	else
 		factor = - 1.0;
 	for (i = my_first_i; i < my_last_i; i++, factor = - factor) {
-		while (flag != my_rank);
+		while (flag != my_rank); // compiler optimization made volatile some variable (compiler know what are in place and important.)
 		sum += factor / (2 * i + 1);
 		flag = (flag + 1) % thread_count;
 	}
@@ -89,5 +92,6 @@ void* Thread_sum(void* rank) {
 	while (flag != my_rank);
 	sum+=m_sum;
 	flag = (flag+1) % thread_count;
-return NULL;
+	
+	return NULL;
 }

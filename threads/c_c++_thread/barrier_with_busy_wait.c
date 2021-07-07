@@ -1,8 +1,8 @@
-int counter; /* Initialize to 0 */
+int counter = 0; /* Initialize to 0 */
 int thread count;
 pthread mutex t barrier mutex;
 
-void∗ Thread work(void * rank) {
+void* Thread work(void * rank) {
 	//. . .
 	/* Barrier */
 	pthread mutex lock(&barrier mutex);
